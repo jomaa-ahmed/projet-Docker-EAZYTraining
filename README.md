@@ -1,143 +1,143 @@
-Objectives
-The objectives of this practice exam are to ensure that you are able to manage a docker infrastructure, so you will be evaluated about the following
+Certainly! Here's the markdown formatted text for your objectives:
 
-Themes:
-improve an existed application deployment process
-versioning your infrastructure release
-address best practice when implementing docker infrastructure
-Infrastructure As Code
-Context
-POZOS is an IT company located in France and develops software for High School.
+```markdown
+# Objectives
 
-The innovation department want to disrupt the existing infrastructure to ensure that
+The objectives of this practice exam are to ensure that you are able to manage a docker infrastructure, so you will be evaluated about the following themes:
 
-it can be scalable, easily deployed with a maximum of automation.
+## Themes:
+- Improve an existing application deployment process
+- Versioning your infrastructure release
+- Address best practices when implementing docker infrastructure
+- Infrastructure As Code
 
-POZOS wants you to build a "POC" to show how docker can help you and how much this technology is efficient.
+## Context
 
-For this POC, POZOS will give you an application and want you to build a "decouple" infrastructure based on "Docker".
+POZOS is an IT company located in France that develops software for High School. The innovation department wants to disrupt the existing infrastructure to ensure that it can be scalable, easily deployed with maximum automation.
 
-Currently, the application is running on a single server with any scalability and any high availability.
+POZOS wants you to build a "POC" to demonstrate how Docker can help achieve this goal and showcase its efficiency.
 
-When POZOS needs to deploy a new release, every time some goes wrong.
+For this POC, POZOS will provide you with an application and wants you to build a decoupled infrastructure based on Docker.
 
-In conclusion, POZOS needs agility on its software farm.
+Currently, the application runs on a single server without scalability or high availability. Deploying a new release often results in issues.
 
-Infrastructure
-For this POC, you will only use one single machine with a docker installed on it.
+In conclusion, POZOS needs agility in its software infrastructure.
 
-The build and the deployment will be made on this machine.
+## Infrastructure
 
-POZOS recommends you to use centos7.6 OS because it's the most used in the company.
+For this POC, you will use a single machine with Docker installed. The build and deployment will be performed on this machine.
 
-Please also note that you are authorized to use a virtual machine base on Centos7.6 and not your physical machine.
+POZOS recommends using CentOS 7.6 OS, as it is widely used within the company. You are authorized to use a virtual machine based on CentOS 7.6, rather than your physical machine.
 
-The security is a very critical aspect of POZOS DSI so please do not disable the firewall or other security mechanisms otherwise please explain your reasons in your delivery.
+Security is critical for POZOS DSI, so please do not disable the firewall or other security mechanisms unless justified in your delivery.
 
-Application
-The application that you will be working on is named "student_list", this application is very basic and enables POZOS to show the list of the student with their age.
+## Application
 
-student_list has two modules:
+The application you will work on is named "student_list." This basic application enables POZOS to display a list of students with their ages.
 
-the first module is a REST API (with basic authentication needed) who send the desire list of the student based on JSON file
-The second module is a web app written in HTML + PHP who enable end-user to get a list of students
-Your work is to build one container for each module an make them interact with each other
+**student_list** has two modules:
+1. A REST API (with basic authentication) that provides a desired list of students based on a JSON file.
+2. A web app written in HTML + PHP that enables end-users to view the list of students.
 
-Application source code can be found [here](https://github.com/diranetafen/student-list.git "here")
+Your task is to build one container for each module and make them interact with each other.
 
-The files that you must provide (in your delivery) are Dockerfile and docker-compose.yml (currently both are empty)
+The source code for the application can be found [here](https://github.com/diranetafen/student-list.git).
 
-Now it is time to explain you each file's role:
+### Files to Provide in Your Delivery:
+- **docker-compose.yml**: To launch the application (API and web app)
+- **Dockerfile**: To build the API image (details provided below)
+- **requirements.txt**: Contains all packages needed to run the application
+- **student_age.json**: Contains student names with ages in JSON format
+- **student_age.py**: Contains the source code of the API in Python
+- **index.php**: PHP page where end-users will interact with the service to list students. You need to update `api_ip_or_name` and `port` before running the website container to fit your deployment.
+- **docker-compose-registry.yml**: To launch the local registry to save your API
 
-docker-compose.yml: to launch the application (API and web app)
-Dockerfile: the file that will be used to build the API image (details will be given)
-requirements.txt: contains all the packages to be installed to run the application
-student_age.json: contain student name with age on JSON format
-student_age.py: contains the source code of the API in python
-index.php: PHP  page where end-user will be connected to interact with the service to - list students with age. You need to update the following line before running the website container to make api_ip_or_name and port fit your deployment
-docker-compose-registry.yml: to launch the local registry to save your API
- $url = 'http://<api_ip_or_name:port>/pozos/api/v1.0/get_student_ages';
-Build and test (7 points)
-POZOS will give you information to build the API container
+### Explanation of Each File's Role:
+- **docker-compose.yml**: Launches the application (API and web app)
+- **Dockerfile**: Builds the API image
+- **requirements.txt**: Lists packages to be installed
+- **student_age.json**: Data source for student ages
+- **student_age.py**: API source code in Python
+- **index.php**: Web app interface for end-users
+- **docker-compose-registry.yml**: Launches a local registry to save your API
 
-Base image
-To build API image you must use "python:3.8-buster"
+## Build and Test (7 points)
 
-Maintainer
-Please don't forget to specify the maintainer information
+POZOS will provide you with information to build the API container.
 
-Add the source code
-You need to copy the source code of the API in the container at the root "/" path
+### API Container Build Instructions:
+- **Base Image**: Use `python:3.8-buster`
+- **Maintainer**: Specify maintainer information
+- **Add Source Code**: Copy API source code to `/` in the container
+- **Prerequisites**: Install necessary packages using:
+  ```bash
+  apt update -y && apt install python-dev python3-dev libsasl2-dev python-dev libldap2-dev libssl-dev -y
+  ```
+- **Copy requirements.txt**: Copy to `/` in the container and install packages:
+  ```bash
+  pip3 install -r /requirements.txt
+  ```
+- **Persistent Data (Volume)**: Create a `/data` folder as a volume to store student list data
+- **API Port**: Expose port `5000`
+- **CMD**: Start the container with:
+  ```bash
+  CMD [ "python3", "./student_age.py" ]
+  ```
 
-Prerequisite
-The API is using FLASK engine,  you need to install some package
+### Build and Test Process:
+- Build your image and run it. Mount `student_age.json` at `/data/student_age.json` in the container.
+- Check logs and verify that the container is listening and ready to respond.
+- Use `curl` to ensure the API is correctly responding. Take a screenshot for delivery.
 
-apt update -y && apt install python-dev python3-dev libsasl2-dev python-dev libldap2-dev libssl-dev -y
-Copy the requirements.txt file into the container in the root "/" directory to install the packages needed to start up our application
+## Infrastructure As Code (5 points)
 
-to launch the installation, use this command
+After testing your API image, combine everything using `docker-compose`.
 
-pip3 install -r /requirements.txt
-Persistent data (volume)
-Create data folder at the root "/" where data will be stored and declare it as a volume
+### docker-compose.yml File:
+Deploy two services:
+- **website**: End-user interface
+  - **Image**: `php:apache`
+  - **Environment**: Provide `USERNAME` and `PASSWORD` for API authentication
+  - **Volumes**: Bind the website directory given by POZOS to `/var/www/html`
+  - **Depend on**: Ensure the API starts before the website
+  - **Port**: Expose necessary ports
 
-You will use this folder to mount student list
+- **API**: Use the image built previously
+  - **Volumes**: Mount `student_age.json` at `/data/student_age.json`
+  - **Port**: Expose necessary ports
+  - **Networks**: Add specific network for your project
 
-API Port
-To interact with this API expose 5000 port
+### Delete Previous Containers:
+Remove any previously created containers.
 
-CMD
-When container start, it must run the student_age.py (copied at step 4), so it should be something like
+### Run docker-compose.yml:
+Launch the application.
 
-CMD [ "python3", "./student_age.py" ]
-Build your image and try to run it (don't forget to mount student_age.json file at /data/student_age.json in the container), check logs and verify that the container is listening and is  ready to answer
+### Final Verification:
+Access your website and click on the "List Student" button. If the student list appears, you have successfully Dockerized the POZOS application! Take a screenshot.
 
-Run this command to make sure that the API correctly responding (take a screenshot for delivery purpose) NB: Start your container using this specific port to reach it Port: 5000
+## Docker Registry (4 points)
 
-curl -u toto:python -X GET http://<host IP>:<API exposed port>/pozos/api/v1.0/get_student_ages
-Congratulation! Now you are ready for the next step (docker-compose.yml)
+Deploy a private registry to store built images.
 
-Infrastructure As Code (5 points)
-After testing your API image, you need to put all together and deploy it, using docker-compose.
+### Requirements:
+- Docker registry
+- Web interface to view pushed images (you can use [Portus](http://port.us.org/))
 
-The docker-compose.yml file will deploy two services :
+### Push Images:
+Push your images to your private registry and show them in your delivery.
 
-website: the end-user interface with the following characteristics
-image: php:apache   - environment: you will provide the USERNAME and PASSWORD to enable the web app to access the API through authentication
-volumes: to avoid php:apache image run with the default website, we will bind the website given by POZOS to use. You must have something like ./website:/var/www/html
-depend on: you need to make sure that the API will start first before the website
-port: do not forget to expose the port
-API: the image builded before should be used with the following specification
-image: the name of the image builded previously   - volumes: You will mount student_age.json file in /data/student_age.json
-port: don't forget to expose the port
-networks: don't forget to add specific network for your project
-Delete your previous created container
+## Delivery (4 points)
 
-Run your docker-compose.yml
+Your delivery should include:
+- A README file with screenshots and explanations.
+- Configuration files used for the graded exercise (`docker-compose.yml` and `Dockerfile`).
+- Your repository link with your name.
 
-Finally, reach your website and click on the bouton "List Student"
+### Evaluation Criteria:
+- Quality of explanations
+- Quality of screenshots (relevance, visibility)
+- Presentation quality
+- Structure of your GitHub repository
 
-If the list of the student appears, you are successfully dockerizing the POZOS application! Congratulation (make a screenshot)
-
-Docker Registry (4 points)
-POZOS need you to deploy a private registry and store the built images
-
-So you need to deploy :
-
-a docker registry
-a web interface to see the pushed image as a container
-Or you can use [Portus](http://port.us.org/ "Portus") to run both
-
-Don't forget to push your image on your private registry and show them in your delivery.
-
-Delivery (4 points)
-Your delivery must be link of your repository with your name that contain:
-
-A README file with your screenshots and explanations.
-Configuration files used to realize the graded exercise (docker-compose.yml and Dockerfile).
-Your delivery will be evaluated on:
-
-Explanations quality
-Screenshots quality (relevance, visibility)
-Presentation quality
-The structure of your github repository
+```
