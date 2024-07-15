@@ -152,4 +152,3 @@ Your delivery should include:
 - Quality of screenshots (relevance, visibility)
 - Presentation quality
 - Structure of your GitHub repository
-```
