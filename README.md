@@ -1,14 +1,11 @@
-Certainly! Here's the markdown formatted text for your objectives:
-
-```markdown
 # Objectives
 
-The objectives of this practice exam are to ensure that you are able to manage a docker infrastructure, so you will be evaluated about the following themes:
+The objectives of this practice exam are to ensure that you are able to manage a Docker infrastructure. You will be evaluated on the following themes:
 
 ## Themes:
 - Improve an existing application deployment process
 - Versioning your infrastructure release
-- Address best practices when implementing docker infrastructure
+- Address best practices when implementing Docker infrastructure
 - Infrastructure As Code
 
 ## Context
@@ -72,72 +69,3 @@ POZOS will provide you with information to build the API container.
 - **Prerequisites**: Install necessary packages using:
   ```bash
   apt update -y && apt install python-dev python3-dev libsasl2-dev python-dev libldap2-dev libssl-dev -y
-  ```
-- **Copy requirements.txt**: Copy to `/` in the container and install packages:
-  ```bash
-  pip3 install -r /requirements.txt
-  ```
-- **Persistent Data (Volume)**: Create a `/data` folder as a volume to store student list data
-- **API Port**: Expose port `5000`
-- **CMD**: Start the container with:
-  ```bash
-  CMD [ "python3", "./student_age.py" ]
-  ```
-
-### Build and Test Process:
-- Build your image and run it. Mount `student_age.json` at `/data/student_age.json` in the container.
-- Check logs and verify that the container is listening and ready to respond.
-- Use `curl` to ensure the API is correctly responding. Take a screenshot for delivery.
-
-## Infrastructure As Code (5 points)
-
-After testing your API image, combine everything using `docker-compose`.
-
-### docker-compose.yml File:
-Deploy two services:
-- **website**: End-user interface
-  - **Image**: `php:apache`
-  - **Environment**: Provide `USERNAME` and `PASSWORD` for API authentication
-  - **Volumes**: Bind the website directory given by POZOS to `/var/www/html`
-  - **Depend on**: Ensure the API starts before the website
-  - **Port**: Expose necessary ports
-
-- **API**: Use the image built previously
-  - **Volumes**: Mount `student_age.json` at `/data/student_age.json`
-  - **Port**: Expose necessary ports
-  - **Networks**: Add specific network for your project
-
-### Delete Previous Containers:
-Remove any previously created containers.
-
-### Run docker-compose.yml:
-Launch the application.
-
-### Final Verification:
-Access your website and click on the "List Student" button. If the student list appears, you have successfully Dockerized the POZOS application! Take a screenshot.
-
-## Docker Registry (4 points)
-
-Deploy a private registry to store built images.
-
-### Requirements:
-- Docker registry
-- Web interface to view pushed images (you can use [Portus](http://port.us.org/))
-
-### Push Images:
-Push your images to your private registry and show them in your delivery.
-
-## Delivery (4 points)
-
-Your delivery should include:
-- A README file with screenshots and explanations.
-- Configuration files used for the graded exercise (`docker-compose.yml` and `Dockerfile`).
-- Your repository link with your name.
-
-### Evaluation Criteria:
-- Quality of explanations
-- Quality of screenshots (relevance, visibility)
-- Presentation quality
-- Structure of your GitHub repository
-
-```
