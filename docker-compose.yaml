@@ -1,0 +1,27 @@
+version: "2"
+services:
+  web: 
+    image: php:apache
+    depends_on:
+      - api
+    ports:
+      - "8082:80"
+    volumes:
+      - ./website:/var/www/html
+    environment:
+      - USERNAME=toto
+      - PASSWORD=python
+    networks:
+      - api_bezos
+
+  api-bozos:
+    image: api-bozos:v3
+    ports:
+      - "4000:5000"
+    volumes:
+      - ./simple_api/student_age.json:/data/student_age.json
+    networks:
+      - api_bezos
+
+networks:
+  api_bezos:
