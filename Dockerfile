@@ -1,5 +1,5 @@
 FROM python:3.8-buster
-MAINTAINER AHMED JOMAA
+MAINTAINER JEMAA
 RUN apt update -y && apt install python-dev python3-dev libsasl2-dev libldap2-dev libssl-dev -y
 COPY requirements.txt student_age.py /
 RUN pip3 install -r /requirements.txt
